@@ -45,8 +45,8 @@
     show-bibliography-as-footnote: bibliography(title: none, "bibliography.bib"),
   ),
   config-info(
-    title: [Title],
-    subtitle: [Subtitle],
+    title: [SISTEMI DI CONTROLLO VERSIONE],
+    subtitle: [Laboratorio su Git e GitHub],
     author: author_list(
       (
         (first_author("Leonardo Micelli"), "leonardo.micelli@uniurb.it"),
@@ -85,5 +85,54 @@
 
 // #components.adaptive-columns(outline(title: none, indent: 1em))
 
-== First slide
-First slide
+== Tenere traccia delle modifiche
+Vi è mai capitato, durante un progetto, di dover tornare indietro a una versione precedente del codice?
+Come avete tenuto traccia della storia del progetto?
+=== L'intuizione
+- Copiare ed incollare il progetto in una nuova cartella
+- Se va bene con una convenzione di nomi "decente" tipo `progetto_v1`, `progetto_v2`, ...
+
+=== Tuttavia...
+- Difficile tenere traccia esattamente di cosa è cambiato tra una versione e l'altra
+- Difficile collaborare in team: come si fa a tenere traccia di chi ha fatto cosa?
+- Come scelgo i singoli cambiamenti da includere in una versione?
+
+== Collaborare in team
+Avete mai dovuto sviluppare un progetto in un team? Come avete organizzato e suddiviso il lavoro? Come avete tenuto traccia di chi ha fatto cosa e come avete integrato i contributi di tutti?
+
+=== Altre grandi intuizioni
+- "Invio" il progetto al mio collega via email, lui lo modifica e me lo rimanda indietro
+- Magari usiamo un servizio di condivisione file tipo Google Drive, Dropbox, OneDrive, ...
+
+== Sistemi di controllo versione (aka Version Control System, VCS)
+Sono sistemi che permettono di:
+- *Tenere traccia* delle modifiche fatte nel tempo
+- *Tornare indietro* a versioni precedenti
+- Collezionare *metadati* su chi ha fatto cosa e quando
+- *Riconciliare (merging)* i contributi di più persone, anche se fatti in parallelo sugli stessi file
+- Sviluppare *parallelamente* e a distanza con altri membri del team
+
+I VCS moderni sono spesso *distribuiti*, ovvero ogni collaboratore ha una copia completa del progetto, con tutta la sua storia, sul proprio computer (*Distributed Version Control System, DVCS*).
+
+== Git
+il più figo di tutti
+
+== Git: concetti base
+=== Repository
+=== Staging area
+=== Commit
+=== Branch
+=== Remote
+=== Clone
+=== Fetch
+=== Merge
+=== Rebase
+=== Pull
+=== Push
+
+== GitHub
+proprio lui
+
+=== Fork
+
+=== Pull request
