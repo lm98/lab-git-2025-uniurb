@@ -114,25 +114,80 @@ Sono sistemi che permettono di:
 
 I VCS moderni sono spesso *distribuiti*, ovvero ogni collaboratore ha una copia completa del progetto, con tutta la sua storia, sul proprio computer (*Distributed Version Control System, DVCS*).
 
-== Git
-il più figo di tutti
+== La storia di un progetto software
+La storia di un progetto software appare lineare:
+#figure(image("images/linear-timeline.png"))
 
-== Git: concetti base
+#pagebreak()
+
+Ma cosa succede quando le cose non funzionano al primo colpo?
+#figure(image("images/failure.png"))
+
+#pagebreak()
+
+Si torna indietro *(rollback)* ad una versione funzionante e si riparte da lì.
+#figure(image("images/branching.png"))
+
+== Sviluppo parallelo
+Immaginate un tipico scenario in cui Alice e Bob stanno lavorando insieme su un progetto. Inizialmente, lavorano insieme al software, dopodiché entrambi tornano a casa e decidono di continuare autonomamente il loro lavoro. Abbiamo una storia *divergente*:
+#figure(image("images/divergence.png"))
+
+#pagebreak()
+
+Serve dunque un modo di *riunire* i loro contributi
+#figure(image("images/reconcile.png"))
+
+== DVCS: concetti base
 === Repository
-=== Staging area
+Contiene tutti i *metadata* del progetto, ovvero:
+- le informazioni necessarie al rollback dei cambiamenti
+- info su chi ha eseguito i cambiamenti e quando
+- date
+- le *differenze* tra una versione e l'altra
+
+Solitamente la repository è una directory nascosta all'interno della radice del progetto (non interagiremo direttamente con essa)
+
+#pagebreak()
+
+=== Working Tree 
+(o *worktree* o *working directory*)
+Contiene i file del progetto su cui lavoriamo, esclusi i metadata, che sono contenuti nella repository
+
+#pagebreak()
+
 === Commit
+Uno stato salvato del progetto.
+- colleziona i *cambiamenti* necessari per passare dallo stato precedente (*parent*) a quello corrente (tecnica chiamata *differential tracking*)
+- contiene altri metadata (autore, data, messaggio descrittivo, id del commit, ...)
+
+Di fatto, un commit costituisce uno *snapshot* del progetto.
+
+#pagebreak()
+
 === Branch
-=== Remote
-=== Clone
-=== Fetch
-=== Merge
-=== Rebase
-=== Pull
-=== Push
+Una sequenza di commit collegati tra loro, ai quali si può accedere tramite una *lable* (es. `main`, `feature-x`, ...)
 
-== GitHub
-proprio lui
+#pagebreak()
 
-=== Fork
+=== Commit reference
+Per essere in grado di tornare ad una versione specifica del progetto, bisogna fare *riferimento* ad uno specifico commit.
 
-=== Pull request
+Esempi validi di commit reference:
+- l'id del commit (es. `a1b2c3d4`)
+- il branch (es. `main`)
+- *HEAD*: si riferisce all'ultimo commit del branch corrente e viene automaticamente aggiornato ad ogni nuovo commit. Ci si può riferire anche a commit in relazione ad HEAD, ad esempio `HEAD~2` si riferisce al commit che è due posizioni prima di HEAD (più comodo che scrivere id tipo `Ph'nglui mglw'nafh Cthulhu R'lyeh wgah'nagl fhtagn`)
+
+Le commit reference vengono spesso chiamate *tree-ish*
+
+#pagebreak()
+
+=== Checkout
+L'operazione che permette di spostare HEAD verso uno specifico tree-ish, ovvero:
+- un commit preciso, spesso precedente ad HEAD (rollback
+- un branch
+
+#pagebreak()
+
+== L'evoluzione di un progetto
+aaa
+#pagebreak()
