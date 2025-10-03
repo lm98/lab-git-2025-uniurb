@@ -116,26 +116,26 @@ I VCS moderni sono spesso *distribuiti*, ovvero ogni collaboratore ha una copia 
 
 == La storia di un progetto software
 La storia di un progetto software appare lineare:
-#figure(image("images/linear-timeline.png"))
+#figure(image("images/linear.svg"))
 
 #pagebreak()
 
 Ma cosa succede quando le cose non funzionano al primo colpo?
-#figure(image("images/failure.png"))
+#figure(image("images/errors.svg"))
 
 #pagebreak()
 
 Si torna indietro *(rollback)* ad una versione funzionante e si riparte da lì.
-#figure(image("images/branching.png"))
+#figure(image("images/branch.svg"))
 
 == Sviluppo parallelo
-Immaginate un tipico scenario in cui Alice e Bob stanno lavorando insieme su un progetto. Inizialmente, lavorano insieme al software, dopodiché entrambi tornano a casa e decidono di continuare autonomamente il loro lavoro. Abbiamo una storia *divergente*:
-#figure(image("images/divergence.png"))
+Alice e Bob lavorano insieme ad un progetto, dopodiché entrambi tornano a casa e decidono di continuare autonomamente il loro lavoro. Abbiamo una storia *divergente*:
+#figure(image("images/collaboration.svg"))
 
 #pagebreak()
 
 Serve dunque un modo di *riunire* i loro contributi
-#figure(image("images/reconcile.png"))
+#figure(image("images/merge.svg"))
 
 == DVCS: concetti base
 === Repository
@@ -194,6 +194,11 @@ Nelle prossime slide vedremo cosa succede esattamente a mano a mano che un proge
 #pagebreak()
 
 #figure(image("images/project-evo-1.svg"))
+
+#pagebreak()
+
+Oh no! Abbiamo scoperto un bug `:((((`
+#figure(image("images/project-evo-2.svg"))
 
 #pagebreak()
 
