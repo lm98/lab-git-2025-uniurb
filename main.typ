@@ -189,5 +189,11 @@ L'operazione che permette di spostare HEAD verso uno specifico tree-ish, ovvero:
 #pagebreak()
 
 == L'evoluzione di un progetto
-aaa
+Nelle prossime slide vedremo cosa succede esattamente a mano a mano che un progetto software evolve nel tempo
+
 #pagebreak()
+
+#figure(image("images/project-evo-1.svg"))
+
+#pagebreak()
+
