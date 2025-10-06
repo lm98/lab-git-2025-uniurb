@@ -346,3 +346,68 @@ bin/
 # rule exception (beginning with a !): pdf files named 'myImportantFile.pdf' should be tracked
 !myImportantFile.pdf
 ```
+
+== Il problema del newline
+Nonostante sia invisibile, l'andare a capo (newline) è un carattere come un altro, e diversi sistemi operativi lo rappresentano in modi diversi:
+- Unix/Linux/MacOS usano `\n` (LF, Line Feed)
+- Windows usa `\r\n` (CRLF, Carriage Return + Line Feed)
+
+Se il vostro team lavora su sistemi operativi diversi, potreste incorrere in problemi di *inconsistenza* dei newline nei files di testo.
+
+#pagebreak()
+
+=== .gitattributes
+- Una soluzione è usare `LF` per ogni file di testo tranne per gli script Windows (es. `.bat`, `.cmd`).
+- Git può essere configurato per fare questa conversione automaticamente, tramite il file `.gitattributes`, che va messo nella root della repository.
+
+```
+# Automatically normalize line endings to LF for all text files (not for binaries)
+* text=auto eol=lf
+# For files with .cmd (case-insensitive) extension, enforce CRLF (Windows style) line endings.
+*.[cC][mM][dD] text eol=crlf
+# For .bat files (Windows batch scripts), use CRLF endings, consistent with Windows shell requirements.
+*.[bB][aA][tT] text eol=crlf
+# For PowerShell script files (.ps1), enforce CRLF endings.
+*.[pP][sS]1 text eol=crlf
+```
+
+== Gestire la rimozione di files
+La cancellazione di un file è, nei DVCS, un cambiamento valido come altri. Questo significa che, per tenerne traccia, bisogna aggiungere la rimozione allo stage: 
+
+```shell
+git add someDeletedFile # aggiunge allo stage la rimozione così che venga inclusa nel prossimo commit
+```
+Rinominare un file equivale a cancellarlo interamente e crearne uno nuovo con un nome diverso, pertanto questi cambiamenti andranno registrati:
+
+```shell
+# Rinominiamo foo in bar
+git add foo bar  # registra la cancellazione di foo e la creazione di bar
+```
+
+Similmente, spostare un file equivale a cancellarlo e ricrearlo in una nuova posizione (rinominarlo).
+
+== Visualizzare la storia del progetto
+Spesso può essere utile visualizzare lo storico dei commit. A tal fine si usa il comando *git log*
+- apre una vista navigabile dello storico dei commit partendo da HEAD e andando indietro nel tempo
+- per un output compatto: `--oneline`
+- per vedere tutti i branch: `--all`
+- per visuaizzare la storia come un grafo: `--graph`
+
+```
+
+# esempio di output del comando git log --oneline --all --graph:
+* d114802 (HEAD -> master, origin/master, origin/HEAD) moar contribution
+| * edb658b (origin/renovate/gohugoio-hugo-0.94.x) ci(deps): update gohugoio/hugo action to v0.94.2
+|/  
+* 4ce3431 ci(deps): update gohugoio/hugo action to v0.94.1
+* 9efa88a ci(deps): update gohugoio/hugo action to v0.93.3
+* bf32a8b begin with build slides
+* b803a65 lesson 1 looks ready
+* 6a85f8f ci(deps): update gohugoio/hugo action to v0.93.2
+```
+
+== Navigare la storia del progetto
+Consiste di fatto nello spostare HEAD su un commit arbitrario, attraverso il comando *git checkout*: 
+- `git checkout <tree-ish>` sposta HEAD sul commit specificato
+- `git checkout -b <branch-name>` crea un nuovo branch a partire dall'attuale HEAD e sposta HEAD su di esso
+- `git checkout -b <branch-name> <tree-ish>` crea un nuovo branch a partire dal commit specificato e sposta HEAD su di esso
