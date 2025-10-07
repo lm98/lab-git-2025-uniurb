@@ -411,3 +411,19 @@ Consiste di fatto nello spostare HEAD su un commit arbitrario, attraverso il com
 - `git checkout <tree-ish>` sposta HEAD sul commit specificato
 - `git checkout -b <branch-name>` crea un nuovo branch a partire dall'attuale HEAD e sposta HEAD su di esso
 - `git checkout -b <branch-name> <tree-ish>` crea un nuovo branch a partire dal commit specificato e sposta HEAD su di esso
+
+== Riconciliare cambiamenti (merging)
+Il comando *git merge* permette di unire due branch creando un *merge commit* in cui i cambiamenti apportati in un branch
+vengono applicati al branch in cui ci si trova. 
+
+```shell
+git checkout main          # sposto HEAD su main
+git merge new-branch   # unisco new-branch in main
+```
+
+#pagebreak()
+=== Prima del merge
+#figure(image("images/merge-rebase-0.svg"))
+
+=== Dopo il merge
+#figure(image("images/merge-1.svg"))
