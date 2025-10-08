@@ -139,6 +139,46 @@ Alice e Bob lavorano insieme ad un progetto, dopodiché entrambi tornano a casa 
 Serve dunque un modo di *riunire* i loro contributi
 #figure(image("images/merge.svg"))
 
+== Before we start: Configurazione di Git
+
+La configurazione di Git avviene a due livelli:
+- *globale:* impostazioni valide per tutto il sistema
+- *locale:* impostazioni valide solo per la repository corrente. Hanno precedenza rispetto alle globali
+TL;DR: configurare globalmente in maniera sensata il tool e localmente solo quando serve.
+
+*git config* è il comando utilizzato per configurare Git. 
+- se eseguito con opzione --global, le impostazioni saranno globali, altrimenti locali
+- usage: git config [--global] category.option value
+
+#pagebreak()
+
+=== Esempi
+
+*Username ed email:*
+
+```shell-unix-generic
+git config --global user.name "Mario Rossi"
+git config --global user.email "mariorossi@email.com"
+```
+
+*Editor di default:*
+Siccome alcune operazioni fanno apparire automaticamente un editor di testo, possiamo configurare l'editor da usare in questi casi:
+
+```shell-unix-generic
+git config --global core.editor nano
+```
+
+#pagebreak()
+
+*Nome di default per il primo branch*
+Solitamente il primo branch di una repository agisce anche da branch principale. Nomi convenzionalmente usati sono `main` o `master`
+
+```shell-unix-generic
+git config --global init.defaultbranch main
+```
+
+#pagebreak()
+
 == DVCS e Git: concetti base
 === Repository
 Contiene tutti i *metadata* del progetto, ovvero:
@@ -211,7 +251,7 @@ git commit -m "My first commit!"    #crea un nuovo commit con i cambiamenti attu
 Congratulazioni, avete appena creato il vostro primo commit con Git!
 #pagebreak()
 
-Andiamo avanti con lo sviluppo del progetto e creiamo la seguente classe Main all'interno di una cartella opm/lab2/git:
+Andiamo avanti con lo sviluppo del progetto e creiamo la seguente classe `Main` all'interno di una cartella `opm/lab2/git`:
 
 ```java
 package opm.lab2.git;
@@ -508,63 +548,57 @@ Aggiungiamo il file `.gitignore` allo stage e facciamo un commit:
 git add .gitignore
 git commit -m "chore: Add .gitignore"
 ```
+
+Ottimo! Abbiamo finito, ora possiamo fare logout dal pc del laboratorio e lasciare che lo script automatico cancelli tutto il nostro lavoro :(
 #pagebreak()
 
-== Operazioni base con Git: Configurazione
+== GitHub
+GitHub è una piattaforma di hosting per progetti software che utilizzano Git come sistema di controllo versione.
+- Permette di ospitare repository Git in remoto
+- Fornisce strumenti per la collaborazione in team (issue tracking, pull request, code review, ...)
+- Offre integrazioni con altri servizi (CI/CD, gestione progetti, ...)
 
-La configurazione di Git avviene a due livelli:
-- *globale:* impostazioni valide per tutto il sistema
-- *locale:* impostazioni valide solo per la repository corrente. Hanno precedenza rispetto alle globali
-TL;DR: configurare globalmente in maniera sensata il tool e localmente solo quando serve.
+La prima funzionalità è quella che ci interessa di più in questo momento.
 
-*git config* è il comando utilizzato per configurare Git. 
-- se eseguito con opzione --global, le impostazioni saranno globali, altrimenti locali
-- usage: git config [--global] category.option value
+
+== Creare una repository su GitHub
+1. Andare su https://github.com e creare un account (se non lo si ha già)
+2. Cliccare sul pulsante "New" in alto a sinistra per creare una nuova repository
+
+#figure(image("images/github-new-repo.png"))
+
+Apparirà una schermata come la seguente:
+
+#figure(image("images/github-repo-info.png"))
+
+== Scaricare una repository da GitHub
+Per scaricare una repository da GitHub, si usa il comando `git clone` seguito dall'url della repository:
+
+```shell-unix-generic
+cd                 #mi sposto nella home directory
+#N.B. sostituire yourUsername con il proprio username GitHub
+git clone https://github.com/yourUsername/opm-lab-git-example.git
+```
+A questo punto possiamo copiare il nostro lavoro (README.md, .gitignore e `opm/`) all'interno della repo scaricata,
+aggiungere tutto allo stage e fare il commit:
 
 #pagebreak()
 
-=== Esempi
-
-*Username ed email:*
-
 ```shell-unix-generic
-git config --global user.name "Mario Rossi"
-git config --global user.email "mariorossi@email.com"
+git add .                               #aggiungo tutto allo stage
+git commit -m "feat: Initial commit"    #faccio il commit
+
+[main (root-commit) 33cb514] feat: Initial commit
+ 4 files changed, 28 insertions(+)
+ create mode 100644 .gitignore
+ create mode 100644 README.md
+ create mode 100644 opm/lab2/git/Counter.java
+ create mode 100644 opm/lab2/git/Main.java
 ```
+N.B. questa nuova repository avrà un solo commit, quelli precedenti appartenevano alla vecchia repository.
 
-*Editor di default:*
-Siccome alcune operazioni fanno apparire automaticamente un editor di testo, possiamo configurare l'editor da usare in questi casi:
 
-```shell-unix-generic
-git config --global core.editor nano
-```
-
-#pagebreak()
-
-*Nome di default per il primo branch*
-Solitamente il primo branch di una repository agisce anche da branch principale. Nomi convenzionalmente usati sono `main` o `master`
-
-```shell-unix-generic
-git config --global init.defaultbranch main
-```
-
-== Gestire la rimozione di files
-La cancellazione di un file è, nei DVCS, un cambiamento valido come altri. Questo significa che, per tenerne traccia, bisogna aggiungere la rimozione allo stage: 
-
-```shell-unix-generic
-git add someDeletedFile # aggiunge allo stage la rimozione così che venga inclusa nel prossimo commit
-```
-Rinominare un file equivale a cancellarlo interamente e crearne uno nuovo con un nome diverso, pertanto questi cambiamenti andranno registrati:
-
-```shell-unix-generic
-# Rinominiamo foo in bar
-git add foo bar  # registra la cancellazione di foo e la creazione di bar
-```
-
-Similmente, spostare un file equivale a cancellarlo e ricrearlo in una nuova posizione (rinominarlo).
-#pagebreak()
-
-== L'evoluzione di un progetto
+== Recap: l'evoluzione di un progetto
 Nelle prossime slide vedremo cosa succede esattamente a mano a mano che un progetto software evolve nel tempo
 
 #pagebreak()
