@@ -114,6 +114,8 @@ Sono sistemi che permettono di:
 
 I VCS moderni sono spesso *distribuiti*, ovvero ogni collaboratore ha una copia completa del progetto, con tutta la sua storia, sul proprio computer (*Distributed Version Control System, DVCS*).
 
+Il DVCS più usato al mondo, che utilizzeremo durante il corso, è *Git*.
+
 == La storia di un progetto software
 La storia di un progetto software appare lineare:
 #figure(image("images/linear.svg"))
@@ -137,7 +139,7 @@ Alice e Bob lavorano insieme ad un progetto, dopodiché entrambi tornano a casa 
 Serve dunque un modo di *riunire* i loro contributi
 #figure(image("images/merge.svg"))
 
-== DVCS: concetti base
+== DVCS e Git: concetti base
 === Repository
 Contiene tutti i *metadata* del progetto, ovvero:
 - le informazioni necessarie al rollback dei cambiamenti
@@ -145,13 +147,36 @@ Contiene tutti i *metadata* del progetto, ovvero:
 - date
 - le *differenze* tra una versione e l'altra
 
-Solitamente la repository è una directory nascosta all'interno della radice del progetto (non interagiremo direttamente con essa)
+Solitamente la repository è una directory nascosta all'interno della radice del progetto (non interagiremo direttamente con essa).
+
+#pagebreak()
+
+In git, per creare una repository si usa il comando `git init`:
+
+```shell
+cd                  #mi sposto nella home directory
+mkdir pmo-lab-git   #creo una cartella per il progetto
+cd pmo-lab-git      #mi sposto dentro la cartella
+git init            #inizializzo una repository git
+```
+
+Si può ispezionare la repository con:
+
+```shell
+ls -a .git    #mostra anche i file nascosti
+.  ..  branches  config  description  HEAD  hooks  info  objects  refs  
+```
 
 #pagebreak()
 
 === Working Tree 
 (o *worktree* o *working directory*)
-Contiene i file del progetto su cui lavoriamo, esclusi i metadata, che sono contenuti nella repository
+Contiene i file del progetto su cui lavoriamo, esclusi i metadata, che sono contenuti nella repository.
+
+Creiamo un file nel nostro working tree:
+```shell
+echo "PMO Lab on Git" > README.md
+```
 
 #pagebreak()
 
@@ -160,12 +185,193 @@ Uno stato salvato del progetto.
 - colleziona i *cambiamenti* necessari per passare dallo stato precedente (*parent*) a quello corrente (tecnica chiamata *differential tracking*)
 - contiene altri metadata (autore, data, messaggio descrittivo, id del commit, ...)
 
-Di fatto, un commit costituisce uno *snapshot* del progetto.
+Di fatto, un commit costituisce una fotografia (o *snapshot*) del progetto.
 
 #pagebreak()
 
 === Branch
 Una sequenza di commit collegati tra loro, ai quali si può accedere tramite una *lable* (es. `main`, `feature-x`, ...)
+
+#pagebreak()
+
+=== Staging area
+In git, esiste il concetto di *stage* (o staging area o index):
+- i cambiamenti, per diventare commit, devono prima essere aggiunti allo stage
+- un commit "prende" i cambiamenti dallo stage e li salva nella repository
+
+Per creare il nostro primo snapshot (commit), dobbiamo prima aggiungere il file README.md allo stage e poi eseguire il commit:
+```shell
+git add README.md                   #aggiunge i cambiamenti fatti a README.md allo stage
+git commit -m "My first commit!"    #crea un nuovo commit con i cambiamenti attualmente nello stage
+
+[master (root-commit) d645f11] My first commit
+ 1 file changed, 1 insertion(+)
+ create mode 100644 README.md
+```
+Congratulazioni, avete appena creato il vostro primo commit con Git!
+#pagebreak()
+
+Andiamo avanti con lo sviluppo del progetto e creiamo la seguente classe Main all'interno di una cartella opm/lab2/git:
+
+```java
+package opm.lab2.git;
+
+class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello, PMO Lab!");
+    }
+}
+```
+
+#pagebreak()
+
+=== Osservare lo stato della repository
+A mano a mano che aggiungiamo files e modifiche, potremmo chiederci:
+- quanti commit sono stati eseguiti?
+- quali file sono stati modificati?
+- quali file sono nello stage?
+- in quale branch siamo?
+
+Per farlo, si usa il comando *git status*:
+```shell
+git status
+n branch master
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	opm/
+
+nothing added to commit but untracked files present (use "git add" to track)
+```
+
+In questo caso, git ci sta dicendo che siamo sul branch `master` e che c'è una cartella `opm/` non tracciata (untracked), ovvero non aggiunta allo stage.
+
+Aggiungiamola con il comando `git add opm/` e rieseguiamo `git status`:
+
+```shell
+git add opm/
+git status
+
+On branch master
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	new file:   opm/lab2/git/Main.java
+```
+
+A questo punto, il file Main.java è stato aggiunto allo stage e sarà incluso nel prossimo commit:
+
+```shell
+git commit -m "feat: Add Main class"
+```
+
+#pagebreak()
+
+=== Visualizzare la storia del progetto
+Spesso può essere utile visualizzare lo storico dei commit. A tal fine si usa il comando *git log*:
+
+```shell
+git log
+commit 05980e1cb5948ddb3ca2b6b07f8a40af34d545de (HEAD -> master)
+Author: lm98 <leonardomicelli@gmail.com>
+Date:   Tue Oct 7 16:21:48 2025 +0200
+
+    feat: Add Main class
+
+commit d645f119b121e7f44a472a1a023450c575c1c23f
+Author: lm98 <leonardomicelli@gmail.com>
+Date:   Tue Oct 7 15:55:54 2025 +0200
+
+    My first commit
+```
+
+N.B. per uscire dalla visualizzazione della storia, premere `q` (quit).
+
+#pagebreak()
+Aggiungiamo altri files allo stesso package:
+
+```java
+package opm.lab2.git;
+
+class Counter {
+    private int count = 0;
+
+    public void increment() {
+        count++;
+    }
+
+    public int getCount() {
+        count; // nota bene: manca il return, gestiremo in seguito l'errore
+    }
+}
+```
+
+#pagebreak()
+
+E committiamo:
+```shell
+git add opm/lab2/git/Counter.java
+git commit -m "feat: Add Counter class"
+```
+
+A questo punto utilizziamo il nostro Counter nella classe Main:
+
+```java
+package opm.lab2.git;
+
+class Main {
+    public static void main(String[] args) {
+        Counter counter = new Counter();
+        counter.increment();
+        System.out.println("Counter value: " + counter.getCount());
+    }
+}
+```
+
+#pagebreak()
+
+E committiamo nuovamente:
+```shell
+git add opm/lab2/git/Main.java
+git commit -m "feat: Use Counter"
+```
+
+#pagebreak()
+
+A questo punto abbiamo la seguente storia del progetto:
+```shell
+git log
+
+commit aef71243d6ea94cee40ebf333f5daf4b5f006612 (HEAD -> master)
+Author: lm98 <leonardomicelli@gmail.com>
+Date:   Wed Oct 8 10:39:46 2025 +0200
+
+    feat: Use Counter
+
+commit 9c748c45efc6467a1f47bb85466864e334ce068c
+Author: lm98 <leonardomicelli@gmail.com>
+Date:   Wed Oct 8 10:39:26 2025 +0200
+
+    feat: Add Counter class
+
+commit 05980e1cb5948ddb3ca2b6b07f8a40af34d545de
+Author: lm98 <leonardomicelli@gmail.com>
+Date:   Tue Oct 7 16:21:48 2025 +0200
+
+    feat: Add Main class
+```
+
+#pagebreak()
+
+Adesso, compiliamo il progetto con `javac`:
+```shell
+javac -d out opm/lab2/git/*.java
+
+opm/lab2/git/Counter.java:15: error: not a statement
+        count;
+        ^
+1 error
+```
+
+Oh no! Ci siamo accorti solo ora che abbiamo "salvato" un errore nella storia del progetto! Dobbiamo tornare indietro e risolvere l'errore.
 
 #pagebreak()
 
@@ -188,49 +394,121 @@ L'operazione che permette di spostare HEAD verso uno specifico tree-ish, ovvero:
 
 #pagebreak()
 
-== L'evoluzione di un progetto
-Nelle prossime slide vedremo cosa succede esattamente a mano a mano che un progetto software evolve nel tempo
+Torniamo allora indietro al commit che introduce la classe Counter, in modo da poter correggere l'errore:
+```shell
+git checkout HEAD~1
+
+Note: switching to 'HEAD~1'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+...
+
+HEAD is now at 9c748c4 feat: Add Counter class
+```
 
 #pagebreak()
 
-#figure(image("images/project-evo-1.svg"))
+=== Detached HEAD
+Adesso siamo in uno stato chiamato *detached HEAD*, ovvero HEAD non punta più ad un branch, ma direttamente ad un commit. In questo stato possiamo comunque fare tutte le modifiche che vogliamo e farne un commit, ma sarà "perso". In git, perché un commit sia valido deve essere l'ultimo commit di un branch.
+
+Creiamo dunque un nuovo branch con il comando *git switch*:
+
+```shell
+git switch -c fix/getcount
+Switched to a new branch 'fix/getcount'
+```
+
+Correggiamo l'errore nella classe Counter, aggiungendo il return mancante e committiamo:
+
+```shell
+git add opm/lab2/git/Counter.java 
+git commit -m "fix: Add return statement"
+```
+
+Adesso abbiamo corretto la classe Counter, ma le modifiche fatte a Main non sono più presenti, perché abbiamo fatto il checkout ad un commit precedente.
 
 #pagebreak()
 
-Oh no! Abbiamo scoperto un bug `:((((`
-#figure(image("images/project-evo-2.svg"))
+=== Riconciliare cambiamenti (merging)
+Il comando *git merge* permette di unire due branch creando un *merge commit* in cui i cambiamenti apportati in un branch
+vengono applicati al branch in cui ci si trova. 
+
+```shell
+git merge master # n.b questo comando aprirà un editor di testo dove scrivere il messaggio del merge commit.
+
+Merge made by the 'ort' strategy.
+ opm/lab2/git/Main.java | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+```
+
+A questo punto il nostro branch `fix/getcount` contiene anche i cambiamenti fatti in `master`.
 
 #pagebreak()
 
-Sappiamo che il progetto sicuramente funzionava al commit 3, possiamo quindi tornare a quel commit e ripartire da lì:
-#figure(image("images/project-evo-3.5.svg"))
+Come buona pratica, è consigliabile tenere la versione più aggiornata e corretta nel branch principale (es. `main` o `master`), pertanto, una volta completato il lavoro in un branch secondario (es. `fix/getcount`), è buona norma unire i cambiamenti fatti in quel branch nel branch principale:
 
-n.b. in questo modo stiamo solo spostando HEAD ad un commit precedente, i commit 4 e 5 sono ancora lì, non sono stati cancellati
+```shell
+git switch master          # spostiamoci sul branch principale
+Switched to branch 'master'
 
-#pagebreak()
-
-Adesso, individuato il bug abbiamo nuovamente un progetto funzionante, possiamo quindi salvare il nostro lavoro con un nuovo commit, creando anche un nuovo branch:
-#figure(image("images/project-evo-4.svg"))
-
-#pagebreak()
-
-Ora però ci rendiamo conto che nel commit 4 c'erano degli aggiornamenti interessanti, che vogliamo integrare nel nostro nuovo branch. Per farlo, dobbiamo *unire* (merge) i due branch:
-#figure(image("images/project-evo-5.svg"))
-
-== Git
-Git è il DVCS più usato al mondo, creato da Linus Torvalds nel 2005 per supportare lo sviluppo del kernel Linux.
-- Open source
-- Più veloce di altri VCS (scritto in C)
-- Distribuito
-
+git merge fix/getcount    # uniamo i cambiamenti fatti in fix/getcount
+Updating aef7124..09ad913
+Fast-forward
+ opm/lab2/git/Counter.java | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+```
+Adesso, se ricompiliamo il progetto, non dovremmo più avere errori.
 
 #pagebreak()
 
-Git è un `tool da linea di comando(CLI)`, ed è così che verrà usato in questa lezione. Esistono anche interfacce grafiche, che sconsigliamo perché:
-- sono soggette a cambiamenti più frequenti rispetto alla CLI (cosa succede se il bottone che usavo non c'è più?)
-- possono esporre più complessità di quelle che affronteremo nel corso (cosa rispondo al pop-up "squash when merging"?)
-- difatto si interpongono tra noi ed il tool
-- una volta imparata la CLI, sarete talmente efficienti che un'interfaccia grafica vi rallenterà soltanto
+=== Ignorare files
+Solitamente non si vuole tenere traccia di *tutti* i files del progetto:
+- alcuni potrebbero essere files temporanei, generati automaticamente (es. file di log, file di build, ...)
+- altri possono essere ri-generati facilmente (es. file di output, ...)
+- altri ancora potrebbero contenere informazioni sensibili (es. file di configurazione con password, ...)
+
+è possibile dire a git di ignorare automaticamente certi files, creando un file `.gitignore` nella root della repository, con dentro i nomi (o pattern) dei files da ignorare.
+
+#pagebreak()
+
+Se eseguiamo il comando `git status`, notiamo dei files `.class` generati dalla compilazione di Java:
+```shell
+git status
+On branch master
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        out/
+
+nothing added to commit but untracked files present (use "git add" to track)
+```
+
+Questi files possono essere rigenerati facilmente compilando di nuovo il progetto, pertanto è buona norma ignorarli includendo la cartella `out/` nel file `.gitignore`:
+
+```shell-unix-generic
+echo "out/" > .gitignore
+```
+
+Adesso, se eseguiamo di nuovo `git status`, non vedremo più la cartella out:
+
+```shell-unix-generic
+git status
+On branch master
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        .gitignore
+
+nothing added to commit but untracked files present (use "git add" to track)
+```
+
+Aggiungiamo il file `.gitignore` allo stage e facciamo un commit:
+```shell-unix-generic
+git add .gitignore
+git commit -m "chore: Add .gitignore"
+```
+#pagebreak()
 
 == Operazioni base con Git: Configurazione
 
@@ -270,107 +548,6 @@ Solitamente il primo branch di una repository agisce anche da branch principale.
 git config --global init.defaultbranch main
 ```
 
-== Inizializzare una repository
-*git init*
-- inizializza una nuova repository Git nella directory corrente
-- crea una sottodirectory nascosta `.git` che conterrà tutti i metadata della repository
-- la direcory contenente la cartella `.git` diventa la *root* della repository
-  - fate attenzione ad eseguire il comando *dentro* la directory che sarà la root del vostro progetto
-  - evitate di inizializzare repository dentro altre repository (per quello c'è il meccanismo dei *submodule*, che però non tratteremo)
-
-Se vi rendete conto di aver inizializzato una repository nella directory sbagliata, potete semplicemente cancellare la cartella `.git` (attenzione: perderete tutta la storia del progetto)
-
-== Staging
-In git, esiste il concetto di *stage* (o staging area o index)
-- i cambiamenti, per diventare commit, devono prima essere aggiunti allo stage
-- un commit "prende" i cambiamenti dallo stage e li salva nella repository
-
-```shell
-git add <files>    #aggiunge i cambiamenti dei file specificati allo stage
-git reset <files>  #rimuove i file specificati dallo stage
-git commit         #crea un nuovo commit con i cambiamenti attualmente nello stage
-```
-== Osservare lo stato della repository
-È fondamentale avere sempre sotto controllo lo stato della repository:
-- in quale branch siamo?
-- quali file sono stati modificati?
-- quali file sono nello stage?
-
-#pagebreak()
-
-Per farlo, si usa il comando *git status*
-```shell
-git status
-On branch master
-Your branch is up to date with 'origin/master'.
-
-Changes to be committed:
-  (use "git restore --staged <file>..." to unstage)
-        modified:   content/_index.md
-        new file:   content/dvcs-basics/_index.md
-        new file:   content/dvcs-basics/staging.png
-
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
-        modified:   layouts/shortcodes/gravizo.html
-        modified:   layouts/shortcodes/today.html
-```
-
-== Fare un commit
-- Richiede un *autore* ed *email* configurati (globalmente o localmente)
-- Richiede un *commit message*. È molto importante che il messaggio sia conciso ma descrittivo dei cambiamenti apportati (raccomandiamo il formato #link("https://www.conventionalcommits.org/en/v1.0.0/#summary", "Conventional Commits")).
-- una *data*, ricavata automaticamente
-- un *id (hash crittografico)*, calcolato automaticamente
-
-```shell
-git commit -m "feat: add initial project structure"   #il flag -m permette di specificare il commit message inline. Altrimenti il default editor apparirà per scriverlo
-```
-
-== Ignorare files
-Solitamente non si vuole tenere traccia di *tutti* i files del progetto:
-- alcuni potrebbero essere files temporanei, generati automaticamente (es. file di log, file di build, ...)
-- altri possono essere ri-generati facilmente (es. file di output, ...)
-- altri ancora potrebbero contenere informazioni sensibili (es. file di configurazione con password, ...)
-
-è possibile dire a git di ignorare automaticamente certi files, creando un file `.gitignore` nella root della repository, con dentro i nomi (o pattern) dei files da ignorare.
-
-#pagebreak()
-
-Esempio di file `.gitignore`:
-```
-# ignore the bin folder and all its contents
-bin/
-# ignore every pdf file
-*.pdf
-# rule exception (beginning with a !): pdf files named 'myImportantFile.pdf' should be tracked
-!myImportantFile.pdf
-```
-
-== Il problema del newline
-Nonostante sia invisibile, l'andare a capo (newline) è un carattere come un altro, e diversi sistemi operativi lo rappresentano in modi diversi:
-- Unix/Linux/MacOS usano `\n` (LF, Line Feed)
-- Windows usa `\r\n` (CRLF, Carriage Return + Line Feed)
-
-Se il vostro team lavora su sistemi operativi diversi, potreste incorrere in problemi di *inconsistenza* dei newline nei files di testo.
-
-#pagebreak()
-
-=== .gitattributes
-- Una soluzione è usare `LF` per ogni file di testo tranne per gli script Windows (es. `.bat`, `.cmd`).
-- Git può essere configurato per fare questa conversione automaticamente, tramite il file `.gitattributes`, che va messo nella root della repository.
-
-```
-# Automatically normalize line endings to LF for all text files (not for binaries)
-* text=auto eol=lf
-# For files with .cmd (case-insensitive) extension, enforce CRLF (Windows style) line endings.
-*.[cC][mM][dD] text eol=crlf
-# For .bat files (Windows batch scripts), use CRLF endings, consistent with Windows shell requirements.
-*.[bB][aA][tT] text eol=crlf
-# For PowerShell script files (.ps1), enforce CRLF endings.
-*.[pP][sS]1 text eol=crlf
-```
-
 == Gestire la rimozione di files
 La cancellazione di un file è, nei DVCS, un cambiamento valido come altri. Questo significa che, per tenerne traccia, bisogna aggiungere la rimozione allo stage: 
 
@@ -385,45 +562,33 @@ git add foo bar  # registra la cancellazione di foo e la creazione di bar
 ```
 
 Similmente, spostare un file equivale a cancellarlo e ricrearlo in una nuova posizione (rinominarlo).
+#pagebreak()
 
-== Visualizzare la storia del progetto
-Spesso può essere utile visualizzare lo storico dei commit. A tal fine si usa il comando *git log*
-- apre una vista navigabile dello storico dei commit partendo da HEAD e andando indietro nel tempo
-- per un output compatto: `--oneline`
-- per vedere tutti i branch: `--all`
-- per visuaizzare la storia come un grafo: `--graph`
-
-```
-
-# esempio di output del comando git log --oneline --all --graph:
-* d114802 (HEAD -> master, origin/master, origin/HEAD) moar contribution
-| * edb658b (origin/renovate/gohugoio-hugo-0.94.x) ci(deps): update gohugoio/hugo action to v0.94.2
-|/  
-* 4ce3431 ci(deps): update gohugoio/hugo action to v0.94.1
-* 9efa88a ci(deps): update gohugoio/hugo action to v0.93.3
-* bf32a8b begin with build slides
-* b803a65 lesson 1 looks ready
-* 6a85f8f ci(deps): update gohugoio/hugo action to v0.93.2
-```
-
-== Navigare la storia del progetto
-Consiste di fatto nello spostare HEAD su un commit arbitrario, attraverso il comando *git checkout*: 
-- `git checkout <tree-ish>` sposta HEAD sul commit specificato
-- `git checkout -b <branch-name>` crea un nuovo branch a partire dall'attuale HEAD e sposta HEAD su di esso
-- `git checkout -b <branch-name> <tree-ish>` crea un nuovo branch a partire dal commit specificato e sposta HEAD su di esso
-
-== Riconciliare cambiamenti (merging)
-Il comando *git merge* permette di unire due branch creando un *merge commit* in cui i cambiamenti apportati in un branch
-vengono applicati al branch in cui ci si trova. 
-
-```shell
-git checkout main          # sposto HEAD su main
-git merge new-branch   # unisco new-branch in main
-```
+== L'evoluzione di un progetto
+Nelle prossime slide vedremo cosa succede esattamente a mano a mano che un progetto software evolve nel tempo
 
 #pagebreak()
-=== Prima del merge
-#figure(image("images/merge-rebase-0.svg"))
 
-=== Dopo il merge
-#figure(image("images/merge-1.svg"))
+#figure(image("images/project-evo-1.svg"))
+
+#pagebreak()
+
+Oh no! Abbiamo scoperto un bug `:((((`
+#figure(image("images/project-evo-2.svg"))
+
+#pagebreak()
+
+Sappiamo che il progetto sicuramente funzionava al commit 3, possiamo quindi tornare a quel commit e ripartire da lì:
+#figure(image("images/project-evo-3.5.svg"))
+
+n.b. in questo modo stiamo solo spostando HEAD ad un commit precedente, i commit 4 e 5 sono ancora lì, non sono stati cancellati
+
+#pagebreak()
+
+Adesso, individuato il bug abbiamo nuovamente un progetto funzionante, possiamo quindi salvare il nostro lavoro con un nuovo commit, creando anche un nuovo branch:
+#figure(image("images/project-evo-4.svg"))
+
+#pagebreak()
+
+Ora però ci rendiamo conto che nel commit 4 c'erano degli aggiornamenti interessanti, che vogliamo integrare nel nostro nuovo branch. Per farlo, dobbiamo *unire* (merge) i due branch:
+#figure(image("images/project-evo-5.svg"))
