@@ -162,7 +162,7 @@ git init            #inizializzo una repository git
 
 Si può ispezionare la repository con:
 
-```shell
+```shell-unix-generic
 ls -a .git    #mostra anche i file nascosti
 .  ..  branches  config  description  HEAD  hooks  info  objects  refs  
 ```
@@ -174,7 +174,7 @@ ls -a .git    #mostra anche i file nascosti
 Contiene i file del progetto su cui lavoriamo, esclusi i metadata, che sono contenuti nella repository.
 
 Creiamo un file nel nostro working tree:
-```shell
+```shell-unix-generic
 echo "PMO Lab on Git" > README.md
 ```
 
@@ -200,7 +200,7 @@ In git, esiste il concetto di *stage* (o staging area o index):
 - un commit "prende" i cambiamenti dallo stage e li salva nella repository
 
 Per creare il nostro primo snapshot (commit), dobbiamo prima aggiungere il file README.md allo stage e poi eseguire il commit:
-```shell
+```shell-unix-generic
 git add README.md                   #aggiunge i cambiamenti fatti a README.md allo stage
 git commit -m "My first commit!"    #crea un nuovo commit con i cambiamenti attualmente nello stage
 
@@ -233,7 +233,7 @@ A mano a mano che aggiungiamo files e modifiche, potremmo chiederci:
 - in quale branch siamo?
 
 Per farlo, si usa il comando *git status*:
-```shell
+```shell-unix-generic
 git status
 n branch master
 Untracked files:
@@ -247,7 +247,7 @@ In questo caso, git ci sta dicendo che siamo sul branch `master` e che c'è una 
 
 Aggiungiamola con il comando `git add opm/` e rieseguiamo `git status`:
 
-```shell
+```shell-unix-generic
 git add opm/
 git status
 
@@ -259,7 +259,7 @@ Changes to be committed:
 
 A questo punto, il file Main.java è stato aggiunto allo stage e sarà incluso nel prossimo commit:
 
-```shell
+```shell-unix-generic
 git commit -m "feat: Add Main class"
 ```
 
@@ -268,7 +268,7 @@ git commit -m "feat: Add Main class"
 === Visualizzare la storia del progetto
 Spesso può essere utile visualizzare lo storico dei commit. A tal fine si usa il comando *git log*:
 
-```shell
+```shell-unix-generic
 git log
 commit 05980e1cb5948ddb3ca2b6b07f8a40af34d545de (HEAD -> master)
 Author: lm98 <leonardomicelli@gmail.com>
@@ -307,7 +307,7 @@ class Counter {
 #pagebreak()
 
 E committiamo:
-```shell
+```shell-unix-generic
 git add opm/lab2/git/Counter.java
 git commit -m "feat: Add Counter class"
 ```
@@ -329,7 +329,7 @@ class Main {
 #pagebreak()
 
 E committiamo nuovamente:
-```shell
+```shell-unix-generic
 git add opm/lab2/git/Main.java
 git commit -m "feat: Use Counter"
 ```
@@ -337,7 +337,7 @@ git commit -m "feat: Use Counter"
 #pagebreak()
 
 A questo punto abbiamo la seguente storia del progetto:
-```shell
+```shell-unix-generic
 git log
 
 commit aef71243d6ea94cee40ebf333f5daf4b5f006612 (HEAD -> master)
@@ -362,7 +362,7 @@ Date:   Tue Oct 7 16:21:48 2025 +0200
 #pagebreak()
 
 Adesso, compiliamo il progetto con `javac`:
-```shell
+```shell-unix-generic
 javac -d out opm/lab2/git/*.java
 
 opm/lab2/git/Counter.java:15: error: not a statement
@@ -395,7 +395,7 @@ L'operazione che permette di spostare HEAD verso uno specifico tree-ish, ovvero:
 #pagebreak()
 
 Torniamo allora indietro al commit che introduce la classe Counter, in modo da poter correggere l'errore:
-```shell
+```shell-unix-generic
 git checkout HEAD~1
 
 Note: switching to 'HEAD~1'.
@@ -416,14 +416,14 @@ Adesso siamo in uno stato chiamato *detached HEAD*, ovvero HEAD non punta più a
 
 Creiamo dunque un nuovo branch con il comando *git switch*:
 
-```shell
+```shell-unix-generic
 git switch -c fix/getcount
 Switched to a new branch 'fix/getcount'
 ```
 
 Correggiamo l'errore nella classe Counter, aggiungendo il return mancante e committiamo:
 
-```shell
+```shell-unix-generic
 git add opm/lab2/git/Counter.java 
 git commit -m "fix: Add return statement"
 ```
@@ -436,7 +436,7 @@ Adesso abbiamo corretto la classe Counter, ma le modifiche fatte a Main non sono
 Il comando *git merge* permette di unire due branch creando un *merge commit* in cui i cambiamenti apportati in un branch
 vengono applicati al branch in cui ci si trova. 
 
-```shell
+```shell-unix-generic
 git merge master # n.b questo comando aprirà un editor di testo dove scrivere il messaggio del merge commit.
 
 Merge made by the 'ort' strategy.
@@ -450,7 +450,7 @@ A questo punto il nostro branch `fix/getcount` contiene anche i cambiamenti fatt
 
 Come buona pratica, è consigliabile tenere la versione più aggiornata e corretta nel branch principale (es. `main` o `master`), pertanto, una volta completato il lavoro in un branch secondario (es. `fix/getcount`), è buona norma unire i cambiamenti fatti in quel branch nel branch principale:
 
-```shell
+```shell-unix-generic
 git switch master          # spostiamoci sul branch principale
 Switched to branch 'master'
 
@@ -475,7 +475,7 @@ Solitamente non si vuole tenere traccia di *tutti* i files del progetto:
 #pagebreak()
 
 Se eseguiamo il comando `git status`, notiamo dei files `.class` generati dalla compilazione di Java:
-```shell
+```shell-unix-generic
 git status
 On branch master
 Untracked files:
@@ -527,7 +527,7 @@ TL;DR: configurare globalmente in maniera sensata il tool e localmente solo quan
 
 *Username ed email:*
 
-```shell
+```shell-unix-generic
 git config --global user.name "Mario Rossi"
 git config --global user.email "mariorossi@email.com"
 ```
@@ -535,7 +535,7 @@ git config --global user.email "mariorossi@email.com"
 *Editor di default:*
 Siccome alcune operazioni fanno apparire automaticamente un editor di testo, possiamo configurare l'editor da usare in questi casi:
 
-```shell
+```shell-unix-generic
 git config --global core.editor nano
 ```
 
@@ -544,19 +544,19 @@ git config --global core.editor nano
 *Nome di default per il primo branch*
 Solitamente il primo branch di una repository agisce anche da branch principale. Nomi convenzionalmente usati sono `main` o `master`
 
-```shell
+```shell-unix-generic
 git config --global init.defaultbranch main
 ```
 
 == Gestire la rimozione di files
 La cancellazione di un file è, nei DVCS, un cambiamento valido come altri. Questo significa che, per tenerne traccia, bisogna aggiungere la rimozione allo stage: 
 
-```shell
+```shell-unix-generic
 git add someDeletedFile # aggiunge allo stage la rimozione così che venga inclusa nel prossimo commit
 ```
 Rinominare un file equivale a cancellarlo interamente e crearne uno nuovo con un nome diverso, pertanto questi cambiamenti andranno registrati:
 
-```shell
+```shell-unix-generic
 # Rinominiamo foo in bar
 git add foo bar  # registra la cancellazione di foo e la creazione di bar
 ```
