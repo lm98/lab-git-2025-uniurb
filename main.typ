@@ -230,7 +230,9 @@ Di fatto, un commit costituisce una fotografia (o *snapshot*) del progetto.
 #pagebreak()
 
 === Branch
-Una sequenza di commit collegati tra loro, ai quali si può accedere tramite una *lable* (es. `main`, `feature-x`, ...)
+Una sequenza di commit collegati tra loro, ai quali si può accedere tramite una *lable* (es. `master`, `main`, `feature-x`, ...)
+
+#figure(image("images/branch-0.svg"))
 
 #pagebreak()
 
@@ -572,31 +574,27 @@ Apparirà una schermata come la seguente:
 #figure(image("images/github-repo-info.png"))
 
 == Scaricare una repository da GitHub
-Per scaricare una repository da GitHub, si usa il comando `git clone` seguito dall'url della repository:
+Per scaricare una repository da GitHub, si usa il comando `git clone` seguito dall'url della repository, che termina con: `username/reponame`
 
 ```shell-unix-generic
 cd                 #mi sposto nella home directory
-#N.B. sostituire yourUsername con il proprio username GitHub
-git clone https://github.com/yourUsername/opm-lab-git-example.git
+#N.B. sostituire yourUsername con l'username GitHub del
+git clone https://github.com/username/repoName.git
 ```
-A questo punto possiamo copiare il nostro lavoro (README.md, .gitignore e `opm/`) all'interno della repo scaricata,
-aggiungere tutto allo stage e fare il commit:
 
-#pagebreak()
+== Esercizio
+Scarichiamo la repository `smontagna/pmo2025-lab`:
 
 ```shell-unix-generic
-git add .                               #aggiungo tutto allo stage
-git commit -m "feat: Initial commit"    #faccio il commit
+git clone https://github.com/smontagna/pmo2025-lab.git
 
-[main (root-commit) 33cb514] feat: Initial commit
- 4 files changed, 28 insertions(+)
- create mode 100644 .gitignore
- create mode 100644 README.md
- create mode 100644 opm/lab2/git/Counter.java
- create mode 100644 opm/lab2/git/Main.java
+# Oppure tramite ssh (se l'avete già impostato)
+git clone git@github.com:smontagna/pmo2025-lab.git
 ```
-N.B. questa nuova repository avrà un solo commit, quelli precedenti appartenevano alla vecchia repository.
 
+Ed eseguiamo gli esercizi contenuti dentro la repo.
+
+N.B. Questo sarà il metodo con cui condivideremo gli esercizi di qui in avanti.
 
 == Recap: l'evoluzione di un progetto
 Nelle prossime slide vedremo cosa succede esattamente a mano a mano che un progetto software evolve nel tempo
