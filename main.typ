@@ -574,12 +574,18 @@ Apparirà una schermata come la seguente:
 #figure(image("images/github-repo-info.png"))
 
 == Scaricare una repository da GitHub
-Per scaricare una repository da GitHub, si usa il comando `git clone` seguito dall'url della repository, che termina con: `username/reponame`
+Le repository sono identificate dal nome utente e nome della repo in questo modo: `username/reponame`.
+
+Per scaricare una repository da GitHub, si usa il comando `git clone` seguito dall'url della repository, che termina con il suo identificativo.
 
 ```shell-unix-generic
 cd                 #mi sposto nella home directory
-#N.B. sostituire yourUsername con l'username GitHub del
-git clone https://github.com/username/repoName.git
+
+#N.B. sostituire username con l'username GitHub e reponame col nome della repository
+git clone https://github.com/username/reponame.git
+
+# Oppure tramite ssh (se l'avete già impostato)
+git clone git@github.com:username/reponame.git
 ```
 
 == Esercizio
@@ -587,9 +593,6 @@ Scarichiamo la repository `smontagna/pmo2025-lab`:
 
 ```shell-unix-generic
 git clone https://github.com/smontagna/pmo2025-lab.git
-
-# Oppure tramite ssh (se l'avete già impostato)
-git clone git@github.com:smontagna/pmo2025-lab.git
 ```
 
 Ed eseguiamo gli esercizi contenuti dentro la repo.
