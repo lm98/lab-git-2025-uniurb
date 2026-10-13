@@ -52,7 +52,7 @@
         (first_author("Leonardo Micelli"), "leonardo.micelli@uniurb.it"),
       ), logo: "images/uniurb.svg"
     ),
-    date: datetime(day: 31, month: 03, year: 2025).display("[day] [month repr:long] [year]"),
+    date: datetime(day: 15, month: 10, year: 2026).display("[day] [month repr:long] [year]"),
   ),
 )
 
@@ -459,9 +459,11 @@ Adesso siamo in uno stato chiamato *detached HEAD*, ovvero HEAD non punta più a
 Creiamo dunque un nuovo branch con il comando *git switch*:
 
 ```shell-unix-generic
-git switch -c fix/getcount
+git switch -c fix/getcount # è buona norma dare un nome significativo e descrittivo al branch
 Switched to a new branch 'fix/getcount'
 ```
+
+(n.b. è possibile utilizzare il comando `git checkout -b <nomeBranch>` al posto di `git switch` per creare e cambiare branch, ma il suo uso è sconsigliato)
 
 Correggiamo l'errore nella classe Counter, aggiungendo il return mancante e committiamo:
 
